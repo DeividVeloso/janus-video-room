@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.4.0/adapter.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+  <script type="text/javascript" src="./janus.js"></script>
+  <script type="text/javascript" src="./textroom.js"></script>
+  <script>
+    $(function () {
+      $(".navbar-static-top").load("navbar.html", function () {
+        $(".navbar-static-top li.dropdown").addClass("active");
+        $(".navbar-static-top a[href='textroomtest.html']").parent().addClass("active");
+      });
+      $(".footer").load("footer.html");
+    });
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/spacelab/bootstrap.min.css"
+    type="text/css">
+
+  <link rel="stylesheet" href="./css/demo.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="page-header">
+          <h1>Plugin Demo: Text Room
+            <button class="btn btn-default" autocomplete="off" id="start">Start</button>
+          </h1>
+        </div>
+        <div class="container" id="details">
+          <div class="row">
+            <div class="col-md-12">
+              <h3>Demo details</h3>
+              <p>The Text Room demo is a simple example of how you can use this text
+                broadcasting plugin, which uses Data Channels, to implement something
+                similar to a chatroom. More specifically, the demo allows you to join
+                a previously created and configured text room together with other
+                participants, and send/receive public and private messages to
+                individual participants. To send messages on the chatroom, just type
+                your text and send. To send private messages to individual participants,
+                click the participant name in the list on the right and a custom dialog
+                will appear.</p>
+              <p>To try the demo, just insert a username to join the room. This will
+                add you to chatroom, and allow you to interact with the other participants.</p>
+              <p>Notice that this is just a very basic demo, and that is just one of
+                the several different ways you can use this plugin for. The plugin
+                actually allows you to join multiple rooms at the same time, and also
+                to forward incoming messages to the room to external components. This
+                makes it a useful tool whenever you have to interact with third party
+                applications and exchange text data.</p>
+              <p>Press the <code>Start</code> button above to launch the demo.</p>
+            </div>
+          </div>
+        </div>
+        <div class="container hide" id="roomjoin">
+          <div class="row">
+            <span class="label label-info" id="you"></span>
+            <div class="col-md-12" id="controls">
+              <div class="input-group margin-bottom-md hide" id="registernow">
+                <span class="input-group-addon">@</span>
+                <input class="form-control" type="text" placeholder="Choose a display name" autocomplete="off"
+                  id="username" onkeypress="return checkEnter(this, event);"
+                  style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAfBJREFUWAntVk1OwkAUZkoDKza4Utm61iP0AqyIDXahN2BjwiHYGU+gizap4QDuegWN7lyCbMSlCQjU7yO0TOlAi6GwgJc0fT/fzPfmzet0crmD7HsFBAvQbrcrw+Gw5fu+AfOYvgylJ4TwCoVCs1ardYTruqfj8fgV5OUMSVVT93VdP9dAzpVvm5wJHZFbg2LQ2pEYOlZ/oiDvwNcsFoseY4PBwMCrhaeCJyKWZU37KOJcYdi27QdhcuuBIb073BvTNL8ln4NeeR6NRi/wxZKQcGurQs5oNhqLshzVTMBewW/LMU3TTNlO0ieTiStjYhUIyi6DAp0xbEdgTt+LE0aCKQw24U4llsCs4ZRJrYopB6RwqnpA1YQ5NGFZ1YQ41Z5S8IQQdP5laEBRJcD4Vj5DEsW2gE6s6g3d/YP/g+BDnT7GNi2qCjTwGd6riBzHaaCEd3Js01vwCPIbmWBRx1nwAN/1ov+/drgFWIlfKpVukyYihtgkXNp4mABK+1GtVr+SBhJDbBIubVw+Cd/TDgKO2DPiN3YUo6y/nDCNEIsqTKH1en2tcwA9FKEItyDi3aIh8Gl1sRrVnSDzNFDJT1bAy5xpOYGn5fP5JuL95ZjMIn1ya7j5dPGfv0A5eAnpZUY3n5jXcoec5J67D9q+VuAPM47D3XaSeL4AAAAASUVORK5CYII=&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;">
+                <span class="input-group-btn">
+                  <button class="btn btn-success" autocomplete="off" id="register">Join the room</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container hide" id="room">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Participants <span class="label label-info hide" id="participant"></span></h3>
+                </div>
+                <div class="panel-body">
+                  <ul id="list" class="list-group">
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Public Chatroom</h3>
+                </div>
+                <div class="panel-body relative" style="overflow-x: auto;" id="chatroom">
+                </div>
+                <div class="panel-footer">
+                  <div class="input-group margin-bottom-sm">
+                    <span class="input-group-addon"><i class="fa fa-cloud-upload fa-fw"></i></span>
+                    <input class="form-control" type="text" placeholder="Write a chatroom message" autocomplete="off"
+                      id="datasend" onkeypress="return checkEnter(this, event);" disabled="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="footer">
+      <p>Janus WebRTC Server © <a href="http://www.meetecho.com">Meetecho</a> 2014-2022</p>
+    </div>
+  </div>
+</body>
+
+</html>
